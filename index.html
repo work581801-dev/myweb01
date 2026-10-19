@@ -1,0 +1,929 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xin Cheng | 空間策展人與視覺設計師</title>
+    <!-- 引入高質感字型：Inter 與 Noto Sans TC -->
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Noto+Sans+TC:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            /* 依據您的情緒版色彩計畫定義專屬變數 */
+            --color-charcoal-blue: #263B48;
+            /* 主色：炭藍 (55%) - 專業、沉穩 */
+            --color-ivory: #F4F1EA;
+            /* 背景色：象牙白 (25%) - 純粹、細膩 */
+            --color-warm-brown: #756B63;
+            /* 輔助色：暖霧棕 (12%) - 溫度、成熟 */
+            --color-champagne: #C9A45C;
+            /* 強調色：香檳金 (5%) - 精品、儀式 */
+            --color-warm-orange: #E9863A;
+            /* 點綴色：暖橙 (3%) - 情感、溫度 */
+
+            --surface-color: #ffffff;
+            /* 卡片表面純白 */
+            --text-main: #1c2b33;
+            /* 深色主字體 */
+            --text-sub: #756B63;
+            /* 次要文字（對應暖霧棕） */
+            --border-color: #ded9cd;
+            /* 微調柔和邊框 */
+
+            --radius: 6px;
+            /* 現代簡約微圓角 */
+            --transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans TC', 'Inter', sans-serif;
+            background-color: var(--color-charcoal-blue);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            line-height: 1.8;
+            letter-spacing: 0.04em;
+        }
+
+        header {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background-color: rgba(38, 59, 72, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2.5rem;
+            height: 85px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo {
+            font-family: 'Inter', sans-serif;
+            font-size: 1.25rem;
+            font-weight: 600;
+            letter-spacing: 0.15em;
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--color-champagne);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2.5rem;
+        }
+
+        nav button {
+            background: none;
+            border: none;
+            color: #d1d5db;
+            font-size: 0.95rem;
+            font-weight: 400;
+            cursor: pointer;
+            transition: var(--transition);
+            font-family: inherit;
+            letter-spacing: 0.08em;
+            position: relative;
+            padding-bottom: 4px;
+        }
+
+        nav button::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--color-champagne);
+            transition: var(--transition);
+        }
+
+        nav button:hover,
+        nav button.active {
+            color: #ffffff;
+            font-weight: 500;
+        }
+
+        nav button:hover::after,
+        nav button.active::after {
+            width: 100%;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            color: #ffffff;
+            cursor: pointer;
+            font-size: 1.5rem;
+        }
+
+        .mobile-nav {
+            display: none;
+            flex-direction: column;
+            background-color: var(--color-charcoal-blue);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 1.5rem 2.5rem;
+            gap: 1.2rem;
+        }
+
+        .mobile-nav button {
+            background: none;
+            border: none;
+            color: #d1d5db;
+            text-align: left;
+            font-size: 1rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .mobile-nav button.active {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        main {
+            flex: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 4rem 2.5rem;
+        }
+
+        .page-section {
+            display: none;
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .page-section.active {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 頁面 1：首頁 (Home) 樣式 */
+        .hero-layout {
+            display: grid;
+            grid-template-columns: 1.2fr 0.8fr;
+            gap: 4rem;
+            align-items: center;
+            min-height: 65vh;
+        }
+
+        .hero-tag {
+            font-size: 0.85rem;
+            color: var(--color-champagne);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            margin-bottom: 1rem;
+            display: inline-block;
+            font-weight: 600;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 4vw, 3.6rem);
+            font-weight: 700;
+            line-height: 1.3;
+            color: #ffffff;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.02em;
+        }
+
+        .hero-content p {
+            color: #d1d5db;
+            font-size: 1.05rem;
+            line-height: 2;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1.2rem;
+            flex-wrap: wrap;
+        }
+
+        /* 統一按鈕形式、顏色一致並加入底圖路徑 12345 */
+        .btn {
+            padding: 0.9rem 2.2rem;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            letter-spacing: 0.08em;
+            background-color: var(--color-champagne);
+            color: var(--color-charcoal-blue);
+            background-image: url('12345');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            border: 1px solid var(--color-champagne);
+        }
+
+        .btn:hover {
+            filter: brightness(1.1);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(201, 164, 92, 0.3);
+        }
+
+        .hero-mood-card {
+            background-color: #1c2b33;
+            color: #ffffff;
+            padding: 3rem 2.5rem;
+            border-radius: var(--radius);
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+
+        .hero-mood-card h3 {
+            font-size: 1.4rem;
+            font-weight: 500;
+            margin-bottom: 1rem;
+            color: #ffffff;
+            letter-spacing: 0.05em;
+        }
+
+        .hero-mood-card p {
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 1.9;
+            margin-bottom: 2rem;
+        }
+
+        /* 區段標題共用樣式 */
+        .section-header {
+            margin-bottom: 3.5rem;
+            border-left: 3px solid var(--color-champagne);
+            padding-left: 1.2rem;
+        }
+
+        .section-header span {
+            font-size: 0.8rem;
+            color: var(--color-champagne);
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            display: block;
+            margin-bottom: 0.4rem;
+            font-weight: 600;
+        }
+
+        .section-header h2 {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            letter-spacing: 0.03em;
+        }
+
+        /* 頁面 2：關於我 (About) 樣式 */
+        .about-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 2rem;
+            margin-bottom: 4rem;
+        }
+
+        .about-card {
+            background-color: #1c2b33;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: var(--radius);
+            padding: 2.5rem 2rem;
+            transition: var(--transition);
+        }
+
+        .about-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.3);
+            border-color: var(--color-champagne);
+        }
+
+        .about-card .num {
+            font-family: 'Inter', sans-serif;
+            font-size: 0.85rem;
+            color: var(--color-champagne);
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            display: block;
+            font-weight: 600;
+        }
+
+        .about-card h3 {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1rem;
+        }
+
+        .about-card p {
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 1.9;
+        }
+
+        .quote-banner {
+            background-color: #1c2b33;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3rem;
+            border-radius: var(--radius);
+            text-align: center;
+            position: relative;
+        }
+
+        .quote-banner blockquote {
+            font-size: 1.2rem;
+            color: #ffffff;
+            font-weight: 500;
+            line-height: 2.2;
+            letter-spacing: 0.05em;
+        }
+
+        /* 頁面 3：精選作品 (Portfolio) 樣式 */
+        .portfolio-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2.5rem;
+        }
+
+        .portfolio-item {
+            background-color: var(--surface-color);
+            border: 1px solid var(--border-color);
+            border-radius: var(--radius);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 30px rgba(38, 59, 72, 0.06);
+        }
+
+        .portfolio-img-box {
+            width: 100%;
+            height: 280px;
+            background-color: #263B48;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+
+        .portfolio-img-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0.85;
+            transition: var(--transition);
+        }
+
+        .portfolio-item:hover .portfolio-img-box img {
+            transform: scale(1.03);
+            opacity: 1;
+        }
+
+        /* 燈箱 Modal 滿畫面檢視樣式 */
+        .lightbox-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0, 0, 0, 0.9);
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .lightbox-modal.active {
+            display: flex;
+            opacity: 1;
+        }
+
+        .lightbox-content {
+            max-width: 90%;
+            max-height: 90vh;
+            object-fit: contain;
+            border-radius: var(--radius);
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+        }
+
+        .lightbox-close {
+            position: absolute;
+            top: 2rem;
+            right: 2.5rem;
+            color: #ffffff;
+            font-size: 2.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .lightbox-close:hover {
+            color: var(--color-champagne);
+        }
+
+        .portfolio-info {
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            flex: 1;
+        }
+
+        .portfolio-tag-badge {
+            font-size: 0.75rem;
+            color: var(--color-champagne);
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            margin-bottom: 0.6rem;
+            font-weight: 600;
+        }
+
+        .portfolio-info h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 0.8rem;
+        }
+
+        .portfolio-info p {
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 1.8;
+            margin-bottom: 2rem;
+            flex: 1;
+        }
+
+        .portfolio-link {
+            color: var(--color-champagne);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+            letter-spacing: 0.08em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: var(--transition);
+        }
+
+        .portfolio-link:hover {
+            color: #ffffff;
+        }
+
+        /* 頁面 4：聯絡我 (Contact) 樣式 */
+        .contact-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            gap: 4rem;
+            background-color: #1c2b33;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 3.5rem;
+            border-radius: var(--radius);
+        }
+
+        .contact-info h3 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: #ffffff;
+            margin-bottom: 1.2rem;
+        }
+
+        .contact-info p {
+            color: #d1d5db;
+            font-size: 0.95rem;
+            line-height: 2;
+            margin-bottom: 2.5rem;
+        }
+
+        .contact-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 1.2rem;
+            color: #d1d5db;
+            font-size: 0.95rem;
+        }
+
+        .contact-meta span {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+        }
+
+        .form-group label {
+            font-size: 0.85rem;
+            letter-spacing: 0.08em;
+            color: #d1d5db;
+            font-weight: 500;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            background-color: #16232b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: var(--radius);
+            padding: 0.9rem 1rem;
+            color: #ffffff;
+            font-family: inherit;
+            font-size: 0.95rem;
+            transition: var(--transition);
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus {
+            border-color: var(--color-champagne);
+            background-color: #1c2b33;
+        }
+
+        .form-group textarea {
+            resize: vertical;
+            min-height: 130px;
+        }
+
+        .toast-box {
+            display: none;
+            background-color: var(--color-champagne);
+            color: var(--color-charcoal-blue);
+            padding: 1rem;
+            border-radius: var(--radius);
+            font-size: 0.9rem;
+            text-align: center;
+            letter-spacing: 0.05em;
+            margin-top: 1rem;
+            font-weight: 600;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2.5rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #d1d5db;
+            font-size: 0.85rem;
+            letter-spacing: 0.1em;
+            background-color: rgba(38, 59, 72, 0.5);
+        }
+
+        /* 響應式斷點設計 */
+        @media (max-width: 900px) {
+            .hero-layout {
+                grid-template-columns: 1fr;
+                gap: 3rem;
+            }
+
+            .about-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .portfolio-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .contact-layout {
+                grid-template-columns: 1fr;
+                padding: 2.5rem;
+            }
+        }
+
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .mobile-nav.open {
+                display: flex;
+            }
+
+            .nav-container {
+                padding: 0 1.5rem;
+                height: 75px;
+            }
+
+            main {
+                padding: 2.5rem 1.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <div class="nav-container">
+            <a href="#" onclick="switchPage('home')" class="logo">Xin<span>.</span> Cheng</a>
+            <nav>
+                <ul>
+                    <li><button onclick="switchPage('home')" id="desktop-nav-home" class="active">首頁</button></li>
+                    <li><button onclick="switchPage('about')" id="desktop-nav-about">關於我</button></li>
+                    <li><button onclick="switchPage('portfolio')" id="desktop-nav-portfolio">精選作品</button></li>
+                    <li><button onclick="switchPage('contact')" id="desktop-nav-contact">聯絡我</button></li>
+                </ul>
+            </nav>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">☰</button>
+        </div>
+        <div class="mobile-nav" id="mobileMenu">
+            <button onclick="switchPage('home'); toggleMobileMenu();" id="mobile-nav-home" class="active">首頁</button>
+            <button onclick="switchPage('about'); toggleMobileMenu();" id="mobile-nav-about">關於我</button>
+            <button onclick="switchPage('portfolio'); toggleMobileMenu();" id="mobile-nav-portfolio">精選作品</button>
+            <button onclick="switchPage('contact'); toggleMobileMenu();" id="mobile-nav-contact">聯絡我</button>
+        </div>
+    </header>
+
+    <main>
+        <!-- 頁面 1：首頁 (Home) -->
+        <section id="page-home" class="page-section active">
+            <div class="hero-layout">
+                <div class="hero-content">
+                    <span class="hero-tag">CURATOR & VISUAL DESIGNER</span>
+                    <h1>以空間構築敘事<br>用視覺定格光影與氣息</h1>
+                    <p>我是 Xin Cheng。致力於將實體空間的場域張力與平面視覺的精準語彙相結合，為品牌與藝術展演轉化出具備沈浸感與當代審美的感官體驗。</p>
+                    <div class="btn-group">
+                        <button class="btn" onclick="switchPage('portfolio')">瀏覽精選作品</button>
+                        <button class="btn" onclick="switchPage('contact')">與我聯絡</button>
+                    </div>
+                </div>
+                <div class="hero-mood-card" style="text-align: center; padding: 2.5rem 2rem;">
+                    <div
+                        style="width: 200px; height: 200px; margin: 0 auto 1.5rem; border-radius: 50%; overflow: hidden; border: 3px solid var(--color-champagne); box-shadow: 0 10px 25px rgba(0,0,0,0.3);">
+                        <img src="./A-01.jpg" alt="Xin Cheng" style="width: 100%; height: 100%; object-fit: cover;"
+                            onerror="this.src='https://placehold.co/400x400/1c2b33/F4F1EA?text=Xin+Cheng'">
+                    </div>
+                    <h3 style="font-size: 1.6rem; letter-spacing: 0.1em; margin-bottom: 0.4rem;">Xin Cheng</h3>
+                    <p
+                        style="color: var(--color-champagne); font-size: 0.9rem; letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 1.2rem;">
+                        空間策展人/視覺設計師</p>
+                    <p style="font-size: 0.9rem; line-height: 1.8; color: #d1d5db; margin-bottom: 0;">
+                        專注於將深厚的人生閱歷與歲月沉澱，轉化為靜謐且具渲染力的視覺語言。</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁面 2：關於我 (About) -->
+        <section id="page-about" class="page-section">
+            <div class="section-header">
+                <span>ABOUT THE CURATORIAL VISION</span>
+                <h2>關於策展與視覺思考</h2>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-card">
+                    <span class="num">01 / 光影與動線動力學</span>
+                    <h3>克制而純粹</h3>
+                    <p>著重於場域自然光與人工光源的微觀控制，導引觀者的視覺焦點與移動節奏，創造富有韻律感的觀展體驗。</p>
+                </div>
+                <div class="about-card">
+                    <span class="num">02 / 材質質地與敘事</span>
+                    <h3>細膩的觸感</h3>
+                    <p>運用石材、金屬、織品與原木的真實觸覺，建立不加雕飾的當代美學，讓空間本身即是展品。</p>
+                </div>
+                <div class="about-card">
+                    <span class="num">03 / 場域視覺系統化</span>
+                    <h3>傳遞心意</h3>
+                    <p>從展覽主視覺、指標導覽系統到宣傳載體，貫徹統一而精準的視覺識別，極致化品牌訊息傳遞。</p>
+                </div>
+            </div>
+
+            <div class="quote-banner">
+                <blockquote>「不從制式開始，從你的故事開始。」</blockquote>
+            </div>
+        </section>
+
+        <!-- 頁面 3：精選作品 (Portfolio) -->
+        <section id="page-portfolio" class="page-section">
+            <div class="section-header">
+                <span>Portfolio Curation</span>
+                <h2>精選專案成果</h2>
+            </div>
+
+            <div class="portfolio-grid" style="margin-bottom: 4rem;">
+                <div class="portfolio-item">
+                    <div class="portfolio-img-box" onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="./img/YT橫幅-01.jpg" alt="YouTube頻道 1"
+                            onerror="this.src='https://placehold.co/600x400/263B48/F4F1EA?text=Project+1'">
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag-badge">AI影片誕生</span>
+                        <h3>YouTube 影片製作</h3>
+                        <p>運用AI生成及編輯，化作意念中的短影音，展現腦袋中的想像。</p>
+                        <a href="https://www.youtube.com/@simonLEE-z2s" target="_blank"
+                            rel="noopener noreferrer" class="portfolio-link">YouTube頻道 →</a>
+                    </div>
+                </div>
+
+                <div class="portfolio-item">
+                    <div class="portfolio-img-box" onclick="openLightbox(this.querySelector('img').src)">
+                        <img src="./img/LOGO-01.jpg" alt="精選專案 2"
+                            onerror="this.src='https://placehold.co/600x400/756B63/F4F1EA?text=Project+2'">
+                    </div>
+                    <div class="portfolio-info">
+                        <span class="portfolio-tag-badge">媒體社團專業經營</span>
+                        <h3>FB粉絲社團經營管理</h3>
+                        <p>專注媒體社團經營管理，開發潛在客戶與良好的互動。</p>
+                        <a href="https://www.facebook.com/xinchean.work?locale=zh_TW" target="_blank"
+                            rel="noopener noreferrer" class="portfolio-link">
+                            facebook粉絲專頁 →</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 水平排列 5 張縮圖照片區塊（無說明欄位，點擊可放大） -->
+            <div class="section-header" style="margin-top: 3rem;">
+                <span>GALLERY PREVIEW</span>
+                <h2>AI作品</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1.4rem; overflow-x: auto; padding-bottom: 1rem;">
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-01.jpg" alt="縮圖 1" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-02.jpg" alt="縮圖 2" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-03.jpg" alt="縮圖 3" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-04.jpg" alt="縮圖 4" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-05.jpg" alt="縮圖 5" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-06.jpg" alt="縮圖 5" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-07.jpg" alt="縮圖 5" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+                <div style="width: 100%; height: 180px; border-radius: var(--radius); overflow: hidden; cursor: pointer; border: 1px solid var(--border-color); background-color: var(--surface-color); transition: var(--transition);" onclick="openLightbox(this.querySelector('img').src)" onmouseover="this.style.transform='translateY(-4px)'" onmouseout="this.style.transform='translateY(0)'">
+                    <img src="./img/C-08.jpg" alt="縮圖 5" style="width: 100%; height: 100%; object-fit: cover;">
+                </div>
+            </div>
+        </section>
+
+        <!-- 頁面 4：聯絡我 (Contact) -->
+        <section id="page-contact" class="page-section">
+            <div class="section-header">
+                <span>Get in Touch</span>
+                <h2>與我展開合作</h2>
+            </div>
+
+            <div class="contact-layout">
+                <div class="contact-info">
+                    <h3>期待與您交流</h3>
+                    <p>無論是空間設計、品牌形象規劃，或是合作提案，都歡迎填寫右側表單與我聯繫。</p>
+                    <div class="contact-meta">
+                        <div>電子信箱：<span>xincheng@gmail.com</span></div>
+                        <div>工作室：<span>桃園市 / 遠端協作</span></div>
+                        <div>合作狀態：<span>目前接受新專案預約</span></div>
+                    </div>
+                </div>
+
+                <form class="contact-form" onsubmit="handleFormSubmit(event)">
+                    <div class="form-group">
+                        <label for="name">您的姓名 / 品牌名稱</label>
+                        <input type="text" id="name" placeholder="例如：林 小姐" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">電子郵件</label>
+                        <input type="email" id="email" placeholder="name@example.com" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">專案需求與想法</label>
+                        <textarea id="message" placeholder="請簡述您的品牌故事或合作構想..." required></textarea>
+                    </div>
+                    <button type="submit" class="btn">送出訊息</button>
+                    <div id="toast" class="toast-box">訊息已成功送出！感謝您的聯繫。</div>
+                </form>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 Xin Cheng. All Rights Reserved. Moodboard Aesthetic.</p>
+    </footer>
+
+    <!-- 唯一的燈箱 Modal 結構（獨立於主內容外並使用類別切換顯示） -->
+    <div id="lightboxModal" class="lightbox-modal" onclick="closeLightbox()">
+        <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+        <img id="lightboxImg" class="lightbox-content" src="" alt="放大檢視">
+    </div>
+
+    <script>
+        // 切換頁面函式
+        function switchPage(pageId) {
+            const sections = document.querySelectorAll('.page-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            const targetSection = document.getElementById('page-' + pageId);
+            if (targetSection) {
+                targetSection.classList.add('active');
+            }
+
+            const desktopNavButtons = document.querySelectorAll('nav button');
+            desktopNavButtons.forEach(btn => btn.classList.remove('active'));
+            const activeDesktopBtn = document.getElementById('desktop-nav-' + pageId);
+            if (activeDesktopBtn) {
+                activeDesktopBtn.classList.add('active');
+            }
+
+            const mobileNavButtons = document.querySelectorAll('.mobile-nav button');
+            mobileNavButtons.forEach(btn => btn.classList.remove('active'));
+            const activeMobileBtn = document.getElementById('mobile-nav-' + pageId);
+            if (activeMobileBtn) {
+                activeMobileBtn.classList.add('active');
+            }
+
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // 手機版選單開關
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('open');
+        }
+
+        // 燈箱放大功能
+        function openLightbox(imgSrc) {
+            const modal = document.getElementById('lightboxModal');
+            const modalImg = document.getElementById('lightboxImg');
+            if (modal && modalImg) {
+                modalImg.src = imgSrc;
+                modal.classList.add('active');
+            }
+        }
+
+        function closeLightbox() {
+            const modal = document.getElementById('lightboxModal');
+            if (modal) {
+                modal.classList.remove('active');
+            }
+        }
+
+        // 表單送出模擬處理
+        function handleFormSubmit(event) {
+            event.preventDefault();
+            const toast = document.getElementById('toast');
+            if (toast) {
+                toast.style.display = 'block';
+            }
+
+            event.target.reset();
+
+            setTimeout(() => {
+                if (toast) {
+                    toast.style.display = 'none';
+                }
+            }, 4000);
+        }
+    </script>
+</body>
+
+</html>
